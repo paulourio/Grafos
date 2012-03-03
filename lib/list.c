@@ -50,14 +50,14 @@ void list_print(const list *lst)
 {
 	list node = *lst;
 
-	printf("[");
+	/* printf("["); */
 	while (node != NULL) {
 		if (*lst != node)
 			printf(", ");
 		printf("%i", node->value);
 		node = node->next;
 	}
-	puts("]");
+	/* puts("]"); */
 }
 
 

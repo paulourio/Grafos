@@ -18,7 +18,9 @@ ncscope.*
 
 CMakeCache.txt
 CMakeFiles
+CTestTestfile.cmake
 cmake_install.cmake
-src/**Makefile
+Makefile
 
+Temporary
 
