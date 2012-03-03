@@ -1,0 +1,24 @@
+.cproject
+.project
+.settings
+*.o
+*.a
+
+# git files that we don't want to ignore even it they are dot-files
+!.gitignore
+
+# Generated include files
+
+# cscope files
+cscope.*
+ncscope.*
+
+*~
+\#*#
+
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+src/**Makefile
+
+
