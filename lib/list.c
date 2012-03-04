@@ -50,12 +50,11 @@ void list_print(const list *lst)
 {
 	list node = *lst;
 
-	while (node != NULL) {
+	do {
 		if (*lst != node)
 			printf(", ");
 		printf("%i", node->value);
-		node = node->next;
-	}
+	} while ((node = node->next) != NULL);
 	putc('\n', stdout);
 }
 
@@ -170,7 +169,7 @@ static inline void *list_insert_after_node(list node, const int value)
 {
 	list new_node;
 
-	create_node(new_node, (node? node->next: NULL));
+	create_node(new_node, (node != NULL?  node->next:  NULL));
 	if (node != NULL)
 		node->next = new_node;
 	return new_node;

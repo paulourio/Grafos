@@ -16,11 +16,5 @@ ncscope.*
 *~
 \#*#
 
-CMakeCache.txt
-CMakeFiles
-CTestTestfile.cmake
-cmake_install.cmake
-Makefile
-
-Temporary
+build/
 
