@@ -16,6 +16,15 @@ This project should be build out-of-source:
 	$ make
 ```
 
+The default build target is "Debug".  You may set to build
+for a Release:
+
+	cmake -D CMAKE_BUILD_TYPE=Release ../
+
+This will strip debugging information and enable optimizations.
+If you want to get the `make` output (command-line executions),
+run `make VERBOSE=1`.
+
 Cleaning
 --------
 
