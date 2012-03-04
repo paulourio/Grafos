@@ -50,14 +50,13 @@ void list_print(const list *lst)
 {
 	list node = *lst;
 
-	/* printf("["); */
 	while (node != NULL) {
 		if (*lst != node)
 			printf(", ");
 		printf("%i", node->value);
 		node = node->next;
 	}
-	/* puts("]"); */
+	putc('\n', stdout);
 }
 
 
@@ -76,7 +75,7 @@ list list_get_back_node(const list *lst)
 	list node = *lst;
 
 	if (node == NULL)
-		return (NULL);
+		return NULL;
 	while (node->next)
 		node = node->next;
 	return node;
@@ -101,14 +100,15 @@ size_t list_delete_if(list *lst, const f_lst_cmp_node fcmp)
 	size_t result = 0;
 
 	if (node == NULL)
-		return (0);
+		return 0;
 	while (node != NULL) {
 		next = node->next;
 		if (fcmp(node->value)) {
 			list_remove_node(lst, node, previous);
 			result++;
-		} else
+		} else {
 			previous = node;
+		}
 		node = next;
 	}
 	return result;
@@ -171,7 +171,7 @@ static inline void *list_insert_after_node(list node, const int value)
 	list new_node;
 
 	create_node(new_node, (node? node->next: NULL));
-	if (node)
+	if (node != NULL)
 		node->next = new_node;
 	return new_node;
 }
@@ -246,7 +246,7 @@ size_t list_count_if(list *lst, const f_lst_cmp_node fcmp)
 	size_t  result = 0;
 
 	if (node == NULL)
-		return (0);
+		return 0;
 	while (node != NULL) {
 		if (fcmp(node->value))
 			result++;
