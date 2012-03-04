@@ -6,9 +6,9 @@ Academic discipline exercises.
 Building
 --------
 
-In order to build, you should have installed `cmake`.
+In order to build, you should have installed `cmake` program.
 
-This project should be build out-of-source:
+This project should be build out-of-source, in a separated folder of source-code:
 
 ```
 	$ mkdir build; cd build
@@ -16,16 +16,18 @@ This project should be build out-of-source:
 	$ make
 ```
 
+Target Options
+--------------
+
 The default build target is "Debug".  You may set the target
 to "Release", which will strip debugging information and
-enable all optimizations (on "Debug" no optimization is enabld),
+enable all optimizations (on "Debug" no optimization is enablad),
 running this command:
 
 	cmake -D CMAKE_BUILD_TYPE=Release ../
 
 
-Additionally, yf you want to get the `make` output (command-line execution),
-run `make VERBOSE=1`.
+Additionally, to get all `make` output, run `make VERBOSE=1`.
 
 Cleaning
 --------
