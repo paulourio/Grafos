@@ -8,7 +8,8 @@ Building
 
 In order to build, you should have installed `cmake` program.
 
-This project should be build out-of-source, in a separated folder of source-code:
+This project is designed to be build out-of-source, in a separated folder 
+from the source:
 
 ```
 	$ mkdir build; cd build
