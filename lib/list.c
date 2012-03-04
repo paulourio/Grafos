@@ -1,7 +1,9 @@
 /*
  *  Author: Paulo Roberto Urio
- *  Date: 2 de Maio de 2011
+ *  Date: May 2, 2011 		Created
+ *  Date: March 4, 2012		Converted to generic values
  *  Description: Linked list source-code.
+ *  License: FreeBSD
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,13 +29,25 @@ inline void list_test(const list *lst)
 }
 
 
-void list_clear(register list *lst)
+static inline void free_node(list node, f_lst_callback_node ffreenode)
+{
+	if (node->value != NULL) {
+		if (ffreenode != NULL)
+			ffreenode(node->value);
+		else
+			free(node->value);
+	}
+	free(node);
+}
+
+
+void list_clear(register list *lst, f_lst_callback_node ffreenode)
 {
 	list current = *lst, next;
 
-	while (current) {
+	while (current != NULL) {
 		next = current->next;
-		free(current);
+		free_node(current);
 		current = next;
 	}
 	*lst = NULL;
@@ -65,7 +79,7 @@ int *list_get(register list *lst, register int index)
 
 	while (node != NULL && index--)
 		node = node->next;
-	return node != NULL?  &node->value:  NULL;
+	return (node != NULL?  &node->value:  NULL);
 }
 
 
@@ -73,9 +87,7 @@ list list_get_back_node(const list *lst)
 {
 	list node = *lst;
 
-	if (node == NULL)
-		return NULL;
-	while (node->next)
+	while (node != NULL && node->next != NULL)
 		node = node->next;
 	return node;
 }
@@ -93,7 +105,7 @@ static void list_remove_node(list *front, list node, list previous)
 }
 
 
-size_t list_delete_if(list *lst, const f_lst_cmp_node fcmp)
+size_t list_delete_if(list *lst, const f_lst_callback_node fcmp)
 {
 	list node = *lst, next, previous = NULL;
 	size_t result = 0;
@@ -192,7 +204,7 @@ void list_insert_front(list *lst, const int value)
 {
 	list new_node;
 
-	create_node(new_node,*lst);
+	create_node(new_node, *lst);
 	*lst = new_node;
 }
 
@@ -205,11 +217,10 @@ void list_insert_back(list *lst, const int value)
 		list_insert_front(lst, value);
 		return;
 	}
-	while (node->next && (node = node->next))
+	while (node->next != NULL && (node = node->next))
 		if (node->next == NULL)
 			break;
-	if (node != NULL)
-		list_insert_after_node(node, value);
+	list_insert_after_node(node, value);
 }
 
 
@@ -234,12 +245,12 @@ void list_fill(list *lst, const size_t items)
 {
 	size_t i;
 
-	for (i=0; i<items; i++)
+	for (i = 0;  i < items;  i++)
 		list_insert_front(lst, (int) (items - i));
 }
 
 
-size_t list_count_if(list *lst, const f_lst_cmp_node fcmp)
+size_t list_count_if(list *lst, const f_lst_callback_node fcmp)
 {
 	list	node = *lst;
 	size_t  result = 0;
