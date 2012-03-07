@@ -29,13 +29,13 @@ typedef void (*f_lst_print_node)(const void *, const int);
 typedef int (*f_lst_compare_nodes)(const void *, const void *);
 
 /* Test if the list is valid (assert will fail when list is empty) */
-extern void list_clear(list *, f_lst_callback_node);
+extern void list_clear(list *, f_lst_callback_node) __nonnull ((1));
 extern bool list_isempty(const list *);
 
 /* Print all items in the format [0, 1, 2, ...] */
-extern void list_print(const list *, const f_lst_print_node);
+extern void list_print(const list *, const f_lst_print_node) __nonnull ((1));
 
-extern void **list_get(const list *, unsigned int) __wur;
+extern void **list_get(const list *, unsigned int) __nonnull ((1)) __wur;
     
 extern list list_get_back_node(const list *) __nonnull ((1)) __wur;
 
@@ -43,7 +43,7 @@ extern list list_get_back_node(const list *) __nonnull ((1)) __wur;
 extern size_t list_remove(const list *, const void *,
 		const f_lst_callback_node) __nonnull ((1));
 extern size_t list_delete_if(list *, const f_lst_callback_node,
-		const f_lst_callback_node);
+		const f_lst_callback_node) __nonnull ((1));
 extern void list_remove_front(list *,
 		const f_lst_callback_node) __nonnull ((1));
 extern void list_remove_back(list *,
@@ -67,6 +67,6 @@ extern size_t list_count_if(list *, const f_lst_callback_node)
 	__nonnull ((1,2)) __wur;
 extern size_t list_count(list *) __nonnull ((1)) __wur;
 
-extern bool list_sorted(list *, const f_lst_compare_nodes);
+extern bool list_sorted(list *, const f_lst_compare_nodes) __nonnull ((1));
 
 #endif
