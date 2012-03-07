@@ -4,7 +4,7 @@ include_directories("${PROJECT_SOURCE_DIR}/lib")
 add_executable(test_list test)
 target_link_libraries(test_list List)
 
-add_executable(test_list_suite test_suite.c insertion.c)
+add_executable(test_list_suite test_suite.c insertion.c general.c)
 target_link_libraries(test_list_suite List)
 
 macro(do_test testname exec arg result)
@@ -30,5 +30,10 @@ set(list3 "ListAddSorted_0_5_-1")
 add_test(${list3} test_list s 0 5 -1)
 expect(${list3} "^-1, 0, 5\n?$")
 
-add_test(ListSuite1 test_list_suite -a)
+add_test(ListSuiteInsFront test_list_suite -f)
+add_test(ListSuiteInsBack test_list_suite -b)
+add_test(ListSuiteInsSorted test_list_suite -s)
+add_test(ListSuiteIsEmpty test_list_suite -e)
+add_test(ListSuiteCounting test_list_suite -c)
+add_test(ListSuiteMemoryCheck valgrind --leak-check=full --error-exitcode=1 ./test_list_suite -a)
 

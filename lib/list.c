@@ -93,17 +93,19 @@ list list_get_back_node(const list *lst)
 
 // Warning: We do not check for invalid arguments.
 __always_inline __nonnull ((1))
-static void list_remove_node(list *front, list node, list previous)
+static void list_remove_node(list *front, list node, list previous,
+		const f_lst_callback_node ffreenode)
 {
 	if (previous != NULL)
 		previous->next = node->next;
 	else
 		*front = node->next;
-	free(node);
+	free_node(node, ffreenode);
 }
 
 
-size_t list_delete_if(list *lst, const f_lst_callback_node fchecknode)
+size_t list_delete_if(list *lst, const f_lst_callback_node fchecknode,
+		const f_lst_callback_node ffreenode)
 {
 	list node = *lst, next, previous = NULL;
 	size_t result = 0;
@@ -113,7 +115,7 @@ size_t list_delete_if(list *lst, const f_lst_callback_node fchecknode)
 	while (node != NULL) {
 		next = node->next;
 		if (fchecknode(node->value)) {
-			list_remove_node(lst, node, previous);
+			list_remove_node(lst, node, previous, ffreenode);
 			result++;
 		} else {
 			previous = node;
@@ -124,7 +126,8 @@ size_t list_delete_if(list *lst, const f_lst_callback_node fchecknode)
 }
 
 
-size_t list_remove(const list *lst, const void *value)
+size_t list_remove(const list *lst, const void *value,
+		const f_lst_callback_node ffreenode)
 {
 	list prev = NULL, node = *lst;
 	size_t count = 0;
@@ -133,7 +136,7 @@ size_t list_remove(const list *lst, const void *value)
 		list next = node->next;
 
 		if (node->value == value) {
-			list_remove_node((list *) lst, node, prev);
+			list_remove_node((list *) lst, node, prev, ffreenode);
 			count++;
 		} else {
 			prev = node;
@@ -144,15 +147,15 @@ size_t list_remove(const list *lst, const void *value)
 }
 
 
-void list_remove_front(list *lst)
+void list_remove_front(list *lst, const f_lst_callback_node ffreenode)
 {
 	if (*lst == NULL)
 		return;
-	list_remove_node(lst, *lst, NULL);
+	list_remove_node(lst, *lst, NULL, ffreenode);
 }
 
 
-void list_remove_back(list *lst)
+void list_remove_back(list *lst, const f_lst_callback_node ffreenode)
 {
 	list prev = NULL, node = *lst;
 
@@ -160,18 +163,19 @@ void list_remove_back(list *lst)
 		return;
 	while (node->next != NULL)
 		node = (prev = node)->next;
-	list_remove_node(lst, node, prev);
+	list_remove_node(lst, node, prev, ffreenode);
 }
 
 
-bool list_remove_pos(list *lst, unsigned int pos)
+bool list_remove_pos(list *lst, unsigned int pos,
+		const f_lst_callback_node ffreenode)
 {
 	list prev = NULL, node = *lst;
 
 	while (pos-- && node->next != NULL)
 		node = (prev = node)->next;
 	if (node != NULL)
-		list_remove_node(lst, node, prev);
+		list_remove_node(lst, node, prev, ffreenode);
 	return (node != NULL);
 }
 
@@ -264,6 +268,19 @@ size_t list_count_if(list *lst, const f_lst_callback_node fcmp)
 	while (node != NULL) {
 		if (fcmp(node->value))
 			result++;
+		node = node->next;
+	}
+	return result;
+}
+
+
+size_t list_count(list *lst)
+{
+	list node = *lst;
+	size_t result = 0;
+
+	while (node != NULL) {
+		result++;
 		node = node->next;
 	}
 	return result;

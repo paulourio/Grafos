@@ -40,11 +40,16 @@ extern void **list_get(const list *, unsigned int) __wur;
 extern list list_get_back_node(const list *) __nonnull ((1)) __wur;
 
 /* Remove methods */
-extern size_t list_remove(const list *, const void *) __nonnull ((1));
-extern size_t list_delete_if(list *, const f_lst_callback_node);
-extern void list_remove_front(list *) __nonnull ((1));
-extern void list_remove_back(list *) __nonnull ((1));
-extern bool list_remove_pos(list *, unsigned int) __nonnull ((1));
+extern size_t list_remove(const list *, const void *,
+		const f_lst_callback_node) __nonnull ((1));
+extern size_t list_delete_if(list *, const f_lst_callback_node,
+		const f_lst_callback_node);
+extern void list_remove_front(list *,
+		const f_lst_callback_node) __nonnull ((1));
+extern void list_remove_back(list *,
+		const f_lst_callback_node) __nonnull ((1));
+extern bool list_remove_pos(list *, unsigned int,
+		const f_lst_callback_node) __nonnull ((1));
 
 /* Insert methods */
 extern void list_insert_pos(list *, unsigned int, void *)
@@ -60,6 +65,7 @@ extern void list_fill(list *, const unsigned int) __nonnull ((1));
 /* Count how many elements are in the list (It uses the compare function */
 extern size_t list_count_if(list *, const f_lst_callback_node)
 	__nonnull ((1,2)) __wur;
+extern size_t list_count(list *) __nonnull ((1)) __wur;
 
 extern bool list_sorted(list *, const f_lst_compare_nodes);
 
