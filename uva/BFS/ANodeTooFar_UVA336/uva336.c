@@ -88,16 +88,17 @@ static void find_out_edges(const unsigned int TTL)
 	unsigned int current = dequeue();
 	unsigned int icurr = get_index(current);
 	list *adj = graph[icurr].adjlist;
-	while (adj != NULL) {
-		unsigned int iadj = get_index(adj->value);
-		if (graph[iadj].color == WHITE) {
-			graph[iadj].color = GRAY;
-			graph[iadj].time = graph[icurr].time + 1;
-			if (graph[iadj].time < TTL)
-				enqueue(adj->value);
+	if (graph[icurr].time < TTL)
+		while (adj != NULL) {
+			unsigned int iadj = get_index(adj->value);
+			if (graph[iadj].color == WHITE) {
+				graph[iadj].color = GRAY;
+				graph[iadj].time = graph[icurr].time + 1;
+				if (graph[iadj].time < TTL)
+					enqueue(adj->value);
+			}
+			adj = adj->next;
 		}
-		adj = adj->next;
-	}
 	graph[icurr].color = BLACK;
 }
 
@@ -123,7 +124,7 @@ static void BFS(void)
 {
 	unsigned int S, TTL, total;
 
-	while (scanf("%u %u", &S, &TTL) == 2 && S != 0 && TTL != 0) {
+	while (scanf("%u %u", &S, &TTL) == 2 && !(S == 0 && TTL == 0)) {
 		total = run_bfs(S, TTL);
 		printf("Case %u: %u nodes not reachable from node %u with TTL = %u.\n",
 				ncase++, total, S, TTL);
@@ -156,7 +157,6 @@ static void read_edge(void)
 static void free_all(void)
 {
 	int i;
-
 	for (i = 0; i < GRAPH_SIZE; i++)
 		if (graph[i].adjlist != NULL)
 			free_list(graph[i].adjlist);

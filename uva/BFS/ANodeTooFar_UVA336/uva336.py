@@ -46,12 +46,13 @@ def inicializar(grafo, inicial):
 # Adiciona à lista Q as arestas de Q, onde há tempo de descoberta
 def descobrir_arestas(grafo, Q, TTL):
 	no = Q.get()
-	for adj in grafo[no][ARESTAS]:
-		if grafo[adj][COR] == BRANCO:
-			grafo[adj][COR] = CINZA
-			grafo[adj][TEMPO] = grafo[no][TEMPO] + 1
-			if grafo[adj][TEMPO] < TTL:
-				Q.put(adj)
+	if grafo[no][TEMPO] < TTL:
+		for adj in grafo[no][ARESTAS]:
+			if grafo[adj][COR] == BRANCO:
+				grafo[adj][COR] = CINZA
+				grafo[adj][TEMPO] = grafo[no][TEMPO] + 1
+				if grafo[adj][TEMPO] < TTL:
+					Q.put(adj)
 	grafo[no][COR] = PRETO
 
 # Quantos vértices brancos existem no grafo
@@ -69,7 +70,7 @@ def BFS(grafo, inicial, TTL):
 		
 	soma = contar_nos_brancos(grafo)
 	print RESPOSTA % (caso, soma, inicial, TTL)
-	#print_grafo(grafo)
+	print_grafo(grafo)
 	caso += 1
 	BFS(grafo, *ler_consulta())
 

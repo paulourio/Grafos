@@ -1,5 +1,7 @@
 
-default: uva336.py entrada.in
+default: py
+
+py: uva336.py entrada.in
 	@python uva336.py < entrada.in
 
 RUNuva336.out:
@@ -10,8 +12,13 @@ rundiff: RUNuva336.out resposta.out
 
 test: default rundiff
 
-cuva336.out: uva336.c
-	gcc uva336.c
+a.out: uva336.c
+	gcc -lm -lcrypt -O2 -pipe -ansi -DONLINE_JUDGE uva336.c
+
+c: a.out entrada.in
+	./a.out < entrada.in
+
+cuva336.out: a.out entrada.in
 	./a.out < entrada.in > uva336.out
 
 crundiff: cuva336.out
