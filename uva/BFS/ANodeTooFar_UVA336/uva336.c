@@ -6,22 +6,17 @@
 
 enum colors {WHITE=1, GRAY, BLACK};
 
-struct list {
+typedef struct list {
 	unsigned int value;
 	struct list *next;
-};
-typedef struct list list;
+} list;
 
-struct node {
-	uint8_t flags;
-	union {
-		int color: 2;
-		int time: 6;
-	};
+typedef struct {
+	int color;
+	int time;
 	unsigned int value;
 	list *adjlist; /* linked list */
-};
-typedef struct node node;
+} node;
 
 #define GRAPH_SIZE 30
 node graph[GRAPH_SIZE];
@@ -43,11 +38,14 @@ static void enqueue(unsigned int value)
 {
 	queue *q = malloc(sizeof(queue)), *l = Q;
 	assert(q != NULL);
-	while (l != NULL && l->next != NULL) l = l->next;
-	if (l != NULL)
+	q->value = value;
+	if (Q == NULL) {
+		Q = q;
+	} else {
+		while (l != NULL && l->next != NULL)
+			l = l->next;
 		l->next = q;
-	else
-		l = q;
+	}
 	q->next = NULL;
 }
 
@@ -61,18 +59,15 @@ static unsigned int dequeue(void)
 	return value;
 }
 
-static void free_deque(void)
-{
-	free_list(Q);
-}
 /* ========= END QUEUE =========== */
 
 static unsigned int get_index(const unsigned int node_value)
 {
 	unsigned int i = 0;
 
-	while (i < GRAPH_SIZE && graph[i].value != node_value)
+	while (i < GRAPH_SIZE && graph[i].value != 0 && graph[i].value != node_value)
 		i++;
+	assert(i < GRAPH_SIZE);
 	graph[i].value = node_value;
 	return i;
 }
@@ -118,7 +113,6 @@ static unsigned int count_white_nodes(void)
 static unsigned int run_bfs(const unsigned int S, const unsigned int TTL)
 {
 	initialize_graph(S);
-	free_deque();
 	enqueue(S);
 	while (Q != NULL)
 		find_out_edges(TTL);
@@ -140,7 +134,7 @@ static void BFS(void)
 
 static void add_edge(const unsigned int from, const unsigned int to)
 {
-	unsigned int ifrom = get_index(from), ito = get_index(from);
+	unsigned int ifrom = get_index(from);
 
 	list *n = malloc(sizeof(list));
 	assert(n != NULL);
@@ -166,7 +160,6 @@ static void free_all(void)
 	for (i = 0; i < GRAPH_SIZE; i++)
 		if (graph[i].adjlist != NULL)
 			free_list(graph[i].adjlist);
-	free_deque();
 }
 
 int main(void)
