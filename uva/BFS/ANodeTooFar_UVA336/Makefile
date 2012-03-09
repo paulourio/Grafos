@@ -18,6 +18,18 @@ a.out: uva336.c
 c: a.out entrada.in
 	./a.out < entrada.in
 
+cpp.out:
+	gcc -lm -lcrypt -O2 -pipe -DONLINE_JUDGE uva336.cpp
+
+cpp: cpp.out
+	./cpp.out < entrada.in
+
+cppuva336.out: cpp.out
+	./cpp.out < entrada.in > uva336.out
+
+cpprundiff: cpp.out cppuva336.out
+	diff resposta.out uva336.out
+
 cuva336.out: a.out entrada.in
 	./a.out < entrada.in > uva336.out
 
@@ -27,5 +39,5 @@ crundiff: cuva336.out
 ctest: crundiff
 
 clean:
-	$(RM) uva336.out a.out
+	$(RM) uva336.out a.out cpp.out
 
