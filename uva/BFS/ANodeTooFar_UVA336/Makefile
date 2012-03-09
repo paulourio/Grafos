@@ -13,13 +13,13 @@ rundiff: RUNuva336.out resposta.out
 test: default rundiff
 
 a.out: uva336.c
-	gcc -lm -lcrypt -O2 -pipe -ansi -DONLINE_JUDGE uva336.c
+	cc -lm -lcrypt -O2 -pipe -ansi -DONLINE_JUDGE uva336.c
 
 c: a.out entrada.in
 	./a.out < entrada.in
 
-cpp.out:
-	gcc -lm -lcrypt -O2 -pipe -DONLINE_JUDGE uva336.cpp
+cpp.out: uva336.cpp
+	g++ -Wall -lm -lcrypt -O2 -pipe -DONLINE_JUDGE uva336.cpp -o cpp.out
 
 cpp: cpp.out
 	./cpp.out < entrada.in
