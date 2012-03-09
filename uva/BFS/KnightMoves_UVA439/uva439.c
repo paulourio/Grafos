@@ -4,10 +4,14 @@
 #include <string.h>
 #include <assert.h>
 
+/* Get the letter (x position) */
 #define LETTER(pos)	(pos >> 8)
+/* Get the number (y position) */
 #define NUMBER(pos)	(pos & 0xFF)
+/* Expand the position to printf arguments */
 #define EXPAND(pos)	LETTER(pos)+'a', NUMBER(pos)+'1'
-#define SQUARE(letter, number)	((letter << 8) + number)
+/* Create a node value */
+#define SQUARE(letter, number)	(((letter) << 8) | (number))
 
 #ifndef ONLINE_JUDGE
 #define err(...)	printf(__VA_ARGS__)
@@ -20,14 +24,14 @@ enum colors {WHITE=1, GRAY, BLACK};
 typedef struct list {
 	uint16_t value;
 	struct list *next;
-	} list;
+} list;
 
 typedef struct {
 	int color;
 	int time;
 	uint16_t value;
 	list *adjlist; /* linked list */
-} node;
+} node; /* graph node (NOT a linked list node) */
 
 #define GRAPH_SIZE 64
 node graph[GRAPH_SIZE];
@@ -72,7 +76,7 @@ static unsigned int dequeue(void)
 }
 
 /* ========= END QUEUE =========== */
-
+/* Find a graph node, or create at the first available position */
 static unsigned int get_index(const unsigned int node_value)
 {
 	unsigned int i = 0;
@@ -104,8 +108,6 @@ static void add_edge(const unsigned int from, const unsigned int to)
 {
 	unsigned int ifrom = get_index(from);
 
-	/*err("Adding %c%c ->  %c%c\n", EXPAND(from), EXPAND(to));*/
-
 	list *n = malloc(sizeof(list));
 	assert(n != NULL);
 	n->next = graph[ifrom].adjlist;
@@ -114,27 +116,18 @@ static void add_edge(const unsigned int from, const unsigned int to)
 
 }
 
+#define in_board(v)	(0 <= v && v < 8)
 static void add_square_edges(const unsigned int s)
 {
-	if (LETTER(s) > 0 && NUMBER(s) < 6)
-		add_edge(s, SQUARE(LETTER(s) - 1, NUMBER(s) + 2));
-	if (LETTER(s) < 7 && NUMBER(s) < 6)
-		add_edge(s, SQUARE(LETTER(s) + 1, NUMBER(s) + 2));
+	int i, deltax[] = {-1, +1, +2, +2, -1, +1, -2, -2};
+	int    deltay[] = {+2, +2, -1, +1, -2, -2, -1, +1};
 
-	if (LETTER(s) < 6 && NUMBER(s) > 0)
-		add_edge(s, SQUARE(LETTER(s) + 2, NUMBER(s) - 1));
-	if (LETTER(s) < 6 && NUMBER(s) < 7)
-		add_edge(s, SQUARE(LETTER(s) + 2, NUMBER(s) + 1));
+	for (i = 0;  i < sizeof(deltax)/sizeof(int);  i++) {
+		int X = LETTER(s) + deltax[i],  Y = NUMBER(s) + deltay[i];
 
-	if (LETTER(s) > 0 && NUMBER(s) > 1)
-		add_edge(s, SQUARE(LETTER(s) - 1, NUMBER(s) - 2));
-	if (LETTER(s) < 7 && NUMBER(s) > 1)
-		add_edge(s, SQUARE(LETTER(s) + 1, NUMBER(s) - 2));
-
-	if (LETTER(s) > 1 && NUMBER(s) > 0)
-		add_edge(s, SQUARE(LETTER(s) - 2, NUMBER(s) - 1));
-	if (LETTER(s) > 1 && NUMBER(s) < 7)
-		add_edge(s, SQUARE(LETTER(s) - 2, NUMBER(s) + 1));
+		if (in_board(X) && in_board(Y))
+			add_edge(s, SQUARE(X, Y));
+	}
 }
 
 static void find_out_edges(void)
@@ -147,15 +140,11 @@ static void find_out_edges(void)
 	list *adj = graph[icurr].adjlist;
 	while (adj != NULL) {
 		unsigned int iadj = get_index(adj->value);
-		/*err("Running with %c%c\n", EXPAND(adj->value));*/
 		if (graph[iadj].color == WHITE) {
 			graph[iadj].color = GRAY;
 			graph[iadj].time = graph[icurr].time + 1;
-			/*err("Running with %c%c painted in GRAY with time %d\n", EXPAND(adj->value), graph[iadj].time);*/
 			if (adj->value == to) {
 				TOTAL_MOVES = graph[iadj].time;
-				while (Q != NULL)
-					(void) dequeue();
 				return;
 			}
 			enqueue(adj->value);
@@ -178,15 +167,10 @@ static void BFS(void)
 {
 	unsigned int total;
 
-	if (from != to)
-		total = run_bfs();
-	else
-		total = 0;
+	total = (from != to?  run_bfs():  0);
 	printf("To get from %c%c to %c%c takes %u knight moves.\n",
 		EXPAND(from), EXPAND(to), total);
 }
-
-/*==============================================*/
 
 static void free_all(void)
 {
@@ -202,8 +186,8 @@ int main(void)
 	
 	while (scanf("%c%c %c%c", &La, &Na, &Lb, &Nb) == 4) {
 		(void) getchar();
-		from = ((La - 'a') << 8) + (Na - '1');
-		to = ((Lb - 'a') << 8) + (Nb - '1');
+		from = SQUARE(La - 'a', Na - '1');
+		to = SQUARE(Lb - 'a', Nb - '1');
 
 		memset(graph, 0, GRAPH_SIZE * sizeof(node));
 		BFS();
