@@ -19,6 +19,9 @@ diff: main.out $(OUTPUT)
 debug: Maindeb
 	./Main < $(INPUT)
 
+valgrind: Maindeb
+	valgrind ./Main < $(INPUT)
+
 clean:
 	$(RM) Main main.out
 
