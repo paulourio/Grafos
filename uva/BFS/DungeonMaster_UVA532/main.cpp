@@ -41,7 +41,8 @@ int main(void)
 		for (L = 0;  L<levels;  L++) {
 			for (R = 0;  R<rows;  R++)
 				assert(scanf("%s", dungeon[L][R]) == 1);
-			(void) getchar();
+			/* Watch out! NDEBUG must not be defined. */
+			assert(getchar() == '\n');
 		}
 		print_dungeon();
 	}
