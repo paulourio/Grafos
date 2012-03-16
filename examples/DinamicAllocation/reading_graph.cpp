@@ -21,7 +21,7 @@ int main(void)
 			graph[from] = new gnode;
 		graph[from]->adj.push_back(to);
 	}
-	/* Free'ing the graph.  Sometimes it is not necessary (like maraton) */
+	/* Freeing the graph.  Sometimes it is not necessary (like maraton) */
 	for (Graph::iterator it = graph.begin(); it != graph.end(); it++)
 		delete (*it).second;
 	return 0;

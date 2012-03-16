@@ -117,7 +117,7 @@ int main(void)
 		int total = (from != to?  BFS():  0);
 		printf("To get from %c%c to %c%c takes %u knight moves.\n",
 			UNPACK(from), UNPACK(to), total);
-		/* LOL: we are not free'ing anything at all :D */
+		/* LOL: we are not freeing anything at all :D */
 	}
 	return 0;
 }
