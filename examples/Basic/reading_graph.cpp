@@ -9,17 +9,14 @@ struct gnode {
 	list<int> adj;
 };
 
-typedef map<int, gnode *> Graph;
+typedef map<int, gnode> Graph;
 
 Graph graph;
 
 int main(void)
 {
-	int f, t;
-	while (scanf("%d %d", &f, &t) == 2) {
-		if (graph[f] == NULL)
-			graph[f] = new gnode;
-		graph[f]->adj.push_back(t);
-	}
+	int from, to;
+	while (scanf("%d %d", &from, &to) == 2)
+		graph[from].adj.push_back(to);
 	return 0;
 }
