@@ -15,9 +15,9 @@ void byref(flags &myflag)
 	myflag.value = 0xABCD;
 }
 
-void byptr(flags *__f)
+void byptr(flags *myflag)
 {
-	__f->value = 0x1487;
+	myflag->value = 0x1487;
 }
 
 int main(void)
