@@ -7,11 +7,11 @@ class Process {
 public:
 	int id;
 	int priority;
-	/* Constructor to initialize values */
+	/* Constructor to initialise values */
 	Process(int aid, int apriority) :
 			id(aid), priority(apriority) {
 	}
-	/* Override operator "<", for compare processes by priority */
+	/* Override operator "<" for comparison of processes by priority */
 	bool operator<(const Process &rhs) const {
 		return priority > rhs.priority;
 	}
