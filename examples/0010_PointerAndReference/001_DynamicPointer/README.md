@@ -45,7 +45,7 @@ Using New/Delete
 
 Look the example.  We create an integer, use it and then we release.
 
-At this point, you can run `make valgrind`.
+At this point, you can run `make valgrind` (make sure you have it installed).
 The `./Main` output will be "b value is 56".  Valgrind will tell you
 any problem you've made in your program about memory management (for instance,
 if you forget to release an allocated block or accessed a not allocated
@@ -72,5 +72,5 @@ This:
 
 	==3424==   total heap usage: 1 allocs, 1 frees, 4 bytes allocated
 	
-The main.cpp allocated and released one time, total of 4 bytes (it's the size of int).
+The main.cpp have allocated and released one time, total of 4 bytes (it's the size of int).
 
