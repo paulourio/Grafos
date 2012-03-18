@@ -40,4 +40,37 @@ malloc/free
 Technically memory allocated by new comes from the 'Free Store' while memory allocated by malloc comes from the 'Heap'. Whether these two areas are the same is an implementation details, which is another reason that malloc and new can not be mixed.
 
 
+Using New/Delete
+================
+
+Look the example.  We create an integer, use it and then we release.
+
+At this point, you can run `make valgrind`.
+The `./Main` output will be "b value is 56".  Valgrind will tell you
+any problem you've made in your program about memory management (for instance,
+if you forget to release an allocated block or accessed a not allocated
+block).
+
+	==3424== Memcheck, a memory error detector
+	==3424== Copyright (C) 2002-2010, and GNU GPL'd, by Julian Seward et al.
+	==3424== Using Valgrind-3.6.1-Debian and LibVEX; rerun with -h for copyright info
+	==3424== Command: ./Main
+	==3424== 
+	b value is 56
+	==3424== 
+	==3424== HEAP SUMMARY:
+	==3424==     in use at exit: 0 bytes in 0 blocks
+	==3424==   total heap usage: 1 allocs, 1 frees, 4 bytes allocated
+	==3424== 
+	==3424== All heap blocks were freed -- no leaks are possible
+	==3424== 
+	==3424== For counts of detected and suppressed errors, rerun with: -v
+	==3424== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 4 from 4)
+
+
+This:
+
+	==3424==   total heap usage: 1 allocs, 1 frees, 4 bytes allocated
+	
+The main.cpp allocated and released one time, total of 4 bytes (it's the size of int).
 
