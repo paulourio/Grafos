@@ -1,29 +1,15 @@
 Queue
 =====
 
-Read a list for processes, each line composed by two numbers, the first is
-the process ID and the second the process priority.
+There are two examples here.
 
-I want the order of how these processes should be executed, based on priority.
-Lower number is higher priority, which is from 1 to 5.
+Both try one solution to the same problem: process priority sorting.
 
-Example
--------
+The instable uses a "priority_queue" which is implemented with a heap.
+Heap is not a stable algorithm, so the solution will fail.
 
-Input:
-1 5
-2 5
-3 3
-4 3
-5 1
-6 1
+The second uses a "deque" and the STL function "stable_sort".  This
+solution will work.
 
-Output:
-5
-6
-3
-4
-2
-1
-
+Probably, using a std::stable_sort is a good call in marathon.
 

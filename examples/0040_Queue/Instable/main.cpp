@@ -7,7 +7,6 @@ class Process {
 public:
 	int id;
 	int priority;
-	/* Constructor to initialise values */
 	Process(int aid, int apriority) :
 			id(aid), priority(apriority) {
 	}
@@ -28,7 +27,7 @@ int main(void) {
 		Process p(id, pr);
 		q.push(p);
 	}
-	/* Print the fair execution order */
+	/* Print the execution order */
 	while (!q.empty()) {
 		printf("%d\n", q.top().id);
 		q.pop();
