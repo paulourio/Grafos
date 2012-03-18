@@ -8,7 +8,7 @@ Main: main.cpp
 	g++ -lm -lcrypt -O2 -pipe -DONLINE_JUDGE main.cpp -o Main
 
 Maindeb: main.cpp
-	g++ -lm -lcrypt -O0 -pipe main.cpp -o Main
+	g++ -Wall -Wextra -lm -lcrypt -O0 -pipe main.cpp -o Main
 
 main.out: Main $(INPUT)
 	./Main < $(INPUT) > main.out
