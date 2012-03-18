@@ -53,6 +53,7 @@ static gnode *get_node(unsigned int value)
 	if (graph[value] == NULL) {
 		graph[value] = new gnode;
 		graph[value]->color = WHITE;
+		graph[value]->value.value = value;
 	}
 	return graph[value];
 }
@@ -104,7 +105,7 @@ static void generate_cells(unsigned int c)
 		n.level = value.level + deltaz[i];
 		if (valid_cell(n)) {
 			if (CELL(n) == EXIT) {
-				printf("Escaped in %d minute(s).", node->time + 1);
+				printf("Escaped in %d minute(s).\n", node->time + 1);
 				FOUND = true;
 				return;
 			}
