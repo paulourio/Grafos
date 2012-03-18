@@ -3,21 +3,21 @@
 using namespace std;
 
 union flags {
-	unsigned int __v;
+	unsigned int value;
 	struct {
 		unsigned int low: 8;
 		unsigned int high: 8;
 	};
 };
 
-void byref(flags &__f)
+void byref(flags &myflag)
 {
-	__f.__v = 0xABCD;
+	myflag.value = 0xABCD;
 }
 
 void byptr(flags *__f)
 {
-	__f->__v = 0x1487;
+	__f->value = 0x1487;
 }
 
 int main(void)
