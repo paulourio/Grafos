@@ -19,8 +19,7 @@ using namespace std;
 
 enum {WHITE, GRAY, BLACK};
 struct gnode {
-	int color;
-	int time;
+	int color, time;
 	list<int> adj;
 };
 
@@ -30,6 +29,7 @@ typedef list<int> Queue;
 Graph graph;
 Queue Q;
 char buffer[301];
+int minimum;
 
 static gnode *get_node(int v)
 {
@@ -73,28 +73,35 @@ static void free_graph(void)
 
 static void show_order(void)
 {
+	err("Topological result:\n");
 	while (!Q.empty()) {
-		printf("%c (Value: %d)\n", Q.front(), graph[Q.front()]->time);
+		err("\t%c (Value: %d)\n", Q.front(), graph[Q.front()]->time - minimum + 1);
 		Q.pop_front();
 	}
 }
 
-static void DFS_Visit(long int v, gnode *node)
+static void DFS_Visit(long int v, gnode *node, int time)
 {
-	err("DFS_VISIT %li\n", v);
+	err("DFS_VISIT %c\n", (char) v, time);
 	node->color = GRAY;
+	node->time = time - 1;
+	if (minimum > node->time)
+		minimum = node->time;
 	foreach(a, node->adj)
-		if (graph[*a]->color == WHITE)
-			DFS_Visit(*a, graph[*a]);
+		if (graph[*a]->color == WHITE) {
+			err("%c --> ", v);
+			DFS_Visit(*a, graph[*a], node->time);
+		}
 	node->color = BLACK;
-	Q.push_front(v);
+	Q.push_back(v);
 }
 
 static void topological_sort(void)
 {
+	minimum = graph.size();
 	foreach(n, graph)
 		if ((*n).second->color == WHITE)
-			DFS_Visit((*n).first, (*n).second);
+			DFS_Visit((*n).first, (*n).second, graph.size());
 	show_order();
 }
 
@@ -102,7 +109,7 @@ int main(void)
 {
 	int T;
 
-	(void) scanf("%d", &T), gc();
+	scanf("%d", &T), gc();
 	while (T--) {
 		fgets(buffer, 300, stdin);
 		err("T: %d - buffer: %s", T, buffer);
