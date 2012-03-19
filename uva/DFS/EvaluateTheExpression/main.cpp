@@ -20,57 +20,61 @@ using namespace std;
 enum {WHITE, GRAY, BLACK};
 struct gnode {
 	int color;
-	list<long int> adj;
+	int time;
+	list<int> adj;
 };
 
-typedef map<long int, gnode *>  Graph;
-typedef list<long int> Queue;
+typedef map<int, gnode *>  Graph;
+typedef list<int> Queue;
 
-long int N, M;
 Graph graph;
 Queue Q;
+char buffer[301];
 
-static void add_adjacent(long int &a, long int &b)
+static gnode *get_node(int v)
 {
-	if (graph[a] == NULL) {
-		graph[a] = new gnode;
-		graph[a]->color = WHITE;
+	gnode *node = graph[v];
+	if (node == NULL) {
+		node = new gnode;
+		node->color = WHITE;
+		node->time = 1;
+		graph[v] = node;
 	}
-	if (graph[b] == NULL) {
-		graph[b] = new gnode;
-		graph[b]->color = WHITE;
-	}
-	graph[a]->adj.push_back(b);
+	return graph[v];
 }
 
-static void read_sticks(long int &M)
+static void add_adjacent(int a, int b)
 {
-	long int a, b;
-	while (M--)
-		if (scanf("%li %li", &a, &b) == 2)
-			add_adjacent(a, b);
-		else
-			err("\nFAIL\n");
+	(void) get_node(b);
+	get_node(a)->adj.push_back(b);
+}
+
+#define gc()	(void) getchar()
+static void read_inequalities(void)
+{
+	char ca, cb;
+	int I;
+	scanf("%d", &I), gc();
+	err("\tI: %d\n", I);
+	while (I--) {
+		scanf("%c>%c", &ca, &cb), gc();
+		err("\tAdding %c > %c\n", ca, cb);
+		add_adjacent(int(ca), int(cb));
+	}
 }
 
 static void free_graph(void)
 {
 	foreach(n, graph)
-			delete (*n).second;
+		delete (*n).second;
 	graph.clear();
-	//while (!Q.empty())
-	//	Q.pop_front();
 	Q.clear();
 }
 
 static void show_order(void)
 {
-	if (Q.size() < N) {
-		puts("IMPOSSIBLE");
-		return;
-	}
 	while (!Q.empty()) {
-		printf("%li\n", Q.front());
+		printf("%c (Value: %d)\n", Q.front(), graph[Q.front()]->time);
 		Q.pop_front();
 	}
 }
@@ -96,8 +100,13 @@ static void topological_sort(void)
 
 int main(void)
 {
-	while (scanf("%li %li", &N, &M) == 2) {
-		read_sticks(M);
+	int T;
+
+	(void) scanf("%d", &T), gc();
+	while (T--) {
+		fgets(buffer, 300, stdin);
+		err("T: %d - buffer: %s", T, buffer);
+		read_inequalities();
 		topological_sort();
 		free_graph();
 	}

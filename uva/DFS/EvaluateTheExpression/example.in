@@ -1,0 +1,13 @@
+3
+a+b*c
+2
+a>b
+c>b
+z*(x+y)
+3
+z>x
+x>y
+z>y
+a+b+c+a
+0
+
