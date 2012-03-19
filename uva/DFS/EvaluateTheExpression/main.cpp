@@ -4,7 +4,6 @@
 #include <cassert>
 #include <map>
 #include <list>
-#include <vector>
 #include <queue>
 
 using namespace std;
@@ -73,7 +72,7 @@ static void free_graph(void)
 
 static void show_order(void)
 {
-	err("Topological result:\n");
+	err("Topological result (min=%d):\n", minimum);
 	while (!Q.empty()) {
 		err("\t%c (Value: %d)\n", Q.front(), graph[Q.front()]->time - minimum + 1);
 		Q.pop_front();
@@ -82,14 +81,14 @@ static void show_order(void)
 
 static void DFS_Visit(long int v, gnode *node, int time)
 {
-	err("DFS_VISIT %c\n", (char) v, time);
+	err("DFS_VISIT %c   (time %d)\n", (char) v, time-1);
 	node->color = GRAY;
 	node->time = time - 1;
 	if (minimum > node->time)
 		minimum = node->time;
 	foreach(a, node->adj)
 		if (graph[*a]->color == WHITE) {
-			err("%c --> ", v);
+			err("%c --> ", (char) v);
 			DFS_Visit(*a, graph[*a], node->time);
 		}
 	node->color = BLACK;
@@ -111,7 +110,7 @@ int main(void)
 
 	scanf("%d", &T), gc();
 	while (T--) {
-		fgets(buffer, 300, stdin);
+		assert(fgets(buffer, 300, stdin) != NULL);
 		err("T: %d - buffer: %s", T, buffer);
 		read_inequalities();
 		topological_sort();
