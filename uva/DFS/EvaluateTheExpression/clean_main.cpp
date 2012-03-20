@@ -11,12 +11,6 @@ using namespace std;
 
 #define foreach(i,l)  for(typeof((l).begin()) i=(l).begin(); i!=(l).end(); i++)
 
-#ifndef ONLINE_JUDGE
-#define err(...)	printf(__VA_ARGS__)
-#else
-#define err(...)
-#endif
-
 enum {WHITE, GRAY, BLACK};
 struct gnode {
 	int color, time;
@@ -56,10 +50,8 @@ static void read_inequalities(void)
 	char ca, cb;
 	int I;
 	scanf("%d", &I), gc();
-	err("\tI: %d\n", I);
 	while (I--) {
 		scanf("%c>%c", &ca, &cb), gc();
-		err("\tAdding %c > %c\n", ca, cb);
 		add_adjacent(int(cb), int(ca));
 	}
 }
@@ -72,15 +64,6 @@ static void free_graph(void)
 	Q.clear();
 }
 
-static void show_order(void)
-{
-	err("Topological result:\n");
-	while (!Q.empty()) {
-		err("\t%c (Value: %d)\n", Q.front(), graph[Q.front()]->time);
-		Q.pop_front();
-	}
-}
-
 static void update_cascade(gnode *node, int time)
 {
 	node->time = time;
@@ -90,17 +73,13 @@ static void update_cascade(gnode *node, int time)
 
 static void DFS_Visit(long int v, gnode *node)
 {
-	err("DFS_VISIT %c (value: %d)\n", (char) v, node->time);
 	node->color = GRAY;
 	foreach(a, node->adj) {
 		gnode *adj = graph[*a];
 		if (node->time >= adj->time)
 			update_cascade(adj, node->time + 1);
-		err("\tupdate %c to %d\n", (char) *a, adj->time);
-		if (adj->color == WHITE) {
-			err("%c --> ", (char) v);
+		if (adj->color == WHITE)
 			DFS_Visit(*a, adj);
-		}
 	}
 	node->color = BLACK;
 	Q.push_back(v);
@@ -108,11 +87,9 @@ static void DFS_Visit(long int v, gnode *node)
 
 static void topological_sort(void)
 {
-	foreach(n, graph) {
+	foreach(n, graph)
 		if ((*n).second->color == WHITE)
 			DFS_Visit((*n).first, (*n).second);
-	}
-	show_order();
 }
 
 static void move_stack_top_to_exp_list(void)
@@ -171,7 +148,6 @@ static void process_expression(void)
 		case '+': {
 			int b = st.top(); st.pop();
 			int a = st.top(); st.pop();
-			err("Evaluating %d <op> %d\n", a, b);
 			if (v == '*')
 				st.push(a * b);
 			else
@@ -198,11 +174,6 @@ int main(void)
 	scanf("%d", &T), gc();
 	while (T--) {
 		read_expression();
-		err("T: %d - buffer: ", T);
-		foreach(e, exp) {
-			err("%c", (char) *e);
-		}
-		err("\n");
 		read_inequalities();
 		topological_sort();
 		process_expression();
