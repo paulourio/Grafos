@@ -5,6 +5,7 @@
 #include <map>
 #include <list>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -25,9 +26,11 @@ struct gnode {
 typedef map<int, gnode *>  Graph;
 typedef list<int> Queue;
 
+list<int>  exp; /* expression */
+stack<int> st;
+
 Graph graph;
 Queue Q;
-char buffer[301];
 
 static gnode *get_node(int v)
 {
@@ -99,7 +102,82 @@ static void topological_sort(void)
 		if ((*n).second->color == WHITE)
 			DFS_Visit((*n).first, (*n).second);
 	show_order();
-	//set_variable_values();
+}
+
+static void move_stack_top_to_exp_list(void)
+{
+	int pop = st.top();
+	st.pop();
+	if (pop != '(')
+		exp.push_back(pop);
+}
+
+#define is_parenthesis(c)	(c == '(' || c == ')')
+#define precedence(a,b)		(a - b)
+static void read_expression(void)
+{
+	exp.clear();
+	while (!st.empty())
+		st.pop();
+	int c;
+	while ((c = getchar()) != '\n') {
+		switch (c) {
+		case '*':
+		case '+':
+			while (!st.empty()) {
+				if (is_parenthesis(st.top()))
+					break;
+				if (precedence(c, st.top()) <= 0)
+					break;
+				move_stack_top_to_exp_list();
+			}
+			st.push(c);
+			break;
+		case '(':
+			st.push(c);
+			break;
+		case ')':
+			while (st.top() != '(')
+				move_stack_top_to_exp_list();
+			break;
+		default:
+			exp.push_back(c);
+			break;
+		}
+	}
+	while (!st.empty())
+		move_stack_top_to_exp_list();
+}
+
+int casenum = 1;
+static void process_expression(void)
+{
+	int v = exp.front();
+
+	while (!exp.empty()) {
+		switch (v) {
+		case '*':
+		case '+': {
+			int b = st.top(); st.pop();
+			int a = st.top(); st.pop();
+			err("Evaluating %d <op> %d\n", a, b);
+			if (v == '*')
+				st.push(a * b);
+			else
+				st.push(a + b);
+			break;
+		}
+		default:
+			if (graph[v] != NULL)
+				st.push(graph[v]->time);
+			else
+				st.push(1);
+			break;
+		}
+		exp.pop_front();
+		v = exp.front();
+	}
+	printf("Case %d: %d\n", casenum++, st.top());
 }
 
 int main(void)
@@ -108,10 +186,15 @@ int main(void)
 
 	scanf("%d", &T), gc();
 	while (T--) {
-		assert(fgets(buffer, 300, stdin) != NULL);
-		err("T: %d - buffer: %s", T, buffer);
+		read_expression();
+		err("T: %d - buffer: ", T);
+		foreach(e, exp) {
+			err("%c", (char) *e);
+		}
+		err("\n");
 		read_inequalities();
 		topological_sort();
+		process_expression();
 		free_graph();
 	}
 	return 0;
