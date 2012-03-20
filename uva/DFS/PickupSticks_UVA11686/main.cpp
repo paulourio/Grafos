@@ -49,54 +49,61 @@ static void read_sticks(long int &M)
 	while (M--)
 		if (scanf("%li %li", &a, &b) == 2)
 			add_adjacent(a, b);
-		else
-			err("\nFAIL\n");
 }
 
 static void free_graph(void)
 {
 	foreach(n, graph)
-			delete (*n).second;
+		delete (*n).second;
 	graph.clear();
-	//while (!Q.empty())
-	//	Q.pop_front();
 	Q.clear();
 }
 
 static void show_order(void)
 {
-	if (Q.size() < N) {
-		puts("IMPOSSIBLE");
-		return;
-	}
 	while (!Q.empty()) {
 		printf("%li\n", Q.front());
 		Q.pop_front();
 	}
 }
 
+bool stop;
 static void DFS_Visit(long int v, gnode *node)
 {
 	err("DFS_VISIT %li\n", v);
 	node->color = GRAY;
-	foreach(a, node->adj)
-		if (graph[*a]->color == WHITE)
-			DFS_Visit(*a, graph[*a]);
+	foreach(a, node->adj) {
+		gnode *adj = graph[*a];
+		if (adj->color == WHITE) {
+			DFS_Visit(*a, adj);
+		} else if (adj->color == GRAY) {
+			puts("IMPOSSIBLE");
+			stop = true;
+		}
+		if (stop)
+			return;
+	}
 	node->color = BLACK;
 	Q.push_front(v);
 }
 
 static void topological_sort(void)
 {
-	foreach(n, graph)
-		if ((*n).second->color == WHITE)
-			DFS_Visit((*n).first, (*n).second);
+	stop = false;
+	foreach(n, graph) {
+		if (n->second->color == WHITE)
+			DFS_Visit(n->first, n->second);
+		if (stop)
+			return;
+	}
 	show_order();
 }
 
 int main(void)
 {
 	while (scanf("%li %li", &N, &M) == 2) {
+		if (N == 0 && M == 0)
+			break;
 		read_sticks(M);
 		topological_sort();
 		free_graph();
