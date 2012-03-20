@@ -81,15 +81,25 @@ static void show_order(void)
 	}
 }
 
+static void update_cascade(gnode *node, int time)
+{
+	node->time = time;
+	foreach(a, node->adj)
+	update_cascade(graph[*a], time+1);
+}
+
 static void DFS_Visit(long int v, gnode *node)
 {
-	err("DFS_VISIT %c\n", (char) v);
+	err("DFS_VISIT %c (value: %d)\n", (char) v, node->time);
 	node->color = GRAY;
 	foreach(a, node->adj) {
-		graph[*a]->time = node->time + 1;
-		if (graph[*a]->color == WHITE) {
+		gnode *adj = graph[*a];
+		if (node->time >= adj->time)
+			update_cascade(adj, node->time + 1);
+		err("\tupdate %c to %d\n", (char) *a, adj->time);
+		if (adj->color == WHITE) {
 			err("%c --> ", (char) v);
-			DFS_Visit(*a, graph[*a]);
+			DFS_Visit(*a, adj);
 		}
 	}
 	node->color = BLACK;
@@ -188,9 +198,8 @@ int main(void)
 	while (T--) {
 		read_expression();
 		err("T: %d - buffer: ", T);
-		foreach(e, exp) {
+		foreach(e, exp)
 			err("%c", (char) *e);
-		}
 		err("\n");
 		read_inequalities();
 		topological_sort();
