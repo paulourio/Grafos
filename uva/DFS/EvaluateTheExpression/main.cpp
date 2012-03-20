@@ -85,7 +85,7 @@ static void update_cascade(gnode *node, int time)
 {
 	node->time = time;
 	foreach(a, node->adj)
-	update_cascade(graph[*a], time+1);
+		update_cascade(graph[*a], time+1);
 }
 
 static void DFS_Visit(long int v, gnode *node)
@@ -108,9 +108,10 @@ static void DFS_Visit(long int v, gnode *node)
 
 static void topological_sort(void)
 {
-	foreach(n, graph)
+	foreach(n, graph) {
 		if ((*n).second->color == WHITE)
 			DFS_Visit((*n).first, (*n).second);
+	}
 	show_order();
 }
 
@@ -198,13 +199,14 @@ int main(void)
 	while (T--) {
 		read_expression();
 		err("T: %d - buffer: ", T);
-		foreach(e, exp)
-			err("%c", (char) *e);
+		//foreach(e, exp) {
+		//	err("%c", (char) *e);
+		//}
 		err("\n");
 		read_inequalities();
 		topological_sort();
 		process_expression();
 		free_graph();
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }
