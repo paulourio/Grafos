@@ -28,7 +28,6 @@ typedef list<int> Queue;
 Graph graph;
 Queue Q;
 char buffer[301];
-int minimum;
 
 static gnode *get_node(int v)
 {
@@ -58,7 +57,7 @@ static void read_inequalities(void)
 	while (I--) {
 		scanf("%c>%c", &ca, &cb), gc();
 		err("\tAdding %c > %c\n", ca, cb);
-		add_adjacent(int(ca), int(cb));
+		add_adjacent(int(cb), int(ca));
 	}
 }
 
@@ -72,36 +71,35 @@ static void free_graph(void)
 
 static void show_order(void)
 {
-	err("Topological result (min=%d):\n", minimum);
+	err("Topological result:\n");
 	while (!Q.empty()) {
-		err("\t%c (Value: %d)\n", Q.front(), graph[Q.front()]->time - minimum + 1);
+		err("\t%c (Value: %d)\n", Q.front(), graph[Q.front()]->time);
 		Q.pop_front();
 	}
 }
 
-static void DFS_Visit(long int v, gnode *node, int time)
+static void DFS_Visit(long int v, gnode *node)
 {
-	err("DFS_VISIT %c   (time %d)\n", (char) v, time-1);
+	err("DFS_VISIT %c\n", (char) v);
 	node->color = GRAY;
-	node->time = time - 1;
-	if (minimum > node->time)
-		minimum = node->time;
-	foreach(a, node->adj)
+	foreach(a, node->adj) {
+		graph[*a]->time = node->time + 1;
 		if (graph[*a]->color == WHITE) {
 			err("%c --> ", (char) v);
-			DFS_Visit(*a, graph[*a], node->time);
+			DFS_Visit(*a, graph[*a]);
 		}
+	}
 	node->color = BLACK;
 	Q.push_back(v);
 }
 
 static void topological_sort(void)
 {
-	minimum = graph.size();
 	foreach(n, graph)
 		if ((*n).second->color == WHITE)
-			DFS_Visit((*n).first, (*n).second, graph.size());
+			DFS_Visit((*n).first, (*n).second);
 	show_order();
+	//set_variable_values();
 }
 
 int main(void)
