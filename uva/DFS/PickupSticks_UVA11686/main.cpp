@@ -48,7 +48,7 @@ static void read_sticks(long int &M)
 	long int a, b;
 	while (M--)
 		if (scanf("%li %li", &a, &b) == 2)
-			add_adjacent(a, b);
+			add_adjacent(b, a);
 }
 
 static void free_graph(void)
@@ -84,7 +84,7 @@ static void DFS_Visit(long int v, gnode *node)
 			return;
 	}
 	node->color = BLACK;
-	Q.push_front(v);
+	Q.push_back(v);
 }
 
 static void topological_sort(void)
