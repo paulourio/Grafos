@@ -20,7 +20,7 @@ debug: Maindeb
 	./Main < $(INPUT)
 
 valgrind: Maindeb
-	valgrind ./Main < $(INPUT)
+	valgrind --leak-check=full ./Main < $(INPUT)
 
 clean:
 	$(RM) Main main.out

@@ -1,4 +1,4 @@
-4
+8
 a+b*c
 2
 a>b
@@ -17,4 +17,20 @@ a>c
 c>b
 e>f
 d>f
+a+b
+2
+a>b
+b>b
+a+b+c
+3
+a>b
+b>a
+c>a
+a
+0
+a+a
+3
+a>b
+b>c
+c>a
 

@@ -11,6 +11,12 @@ using namespace std;
 
 #define foreach(i,l)  for(typeof((l).begin()) i=(l).begin(); i!=(l).end(); i++)
 
+#ifndef ONLINE_JUDGE
+#define err(...)	printf(__VA_ARGS__)
+#else
+#define err(...)
+#endif
+
 enum {WHITE, GRAY, BLACK};
 struct gnode {
 	int color, time;
@@ -20,11 +26,13 @@ struct gnode {
 typedef map<int, gnode *>  Graph;
 typedef list<int> Queue;
 
+char buffer[301];
 list<int>  exp; /* expression */
 stack<int> st;
-
+bool inconsistent;
 Graph graph;
 Queue Q;
+int casenum = 1;
 
 static gnode *get_node(int v)
 {
@@ -40,20 +48,33 @@ static gnode *get_node(int v)
 
 static void add_adjacent(int a, int b)
 {
-	(void) get_node(b);
+	if (a == b) {
+		printf("Case %d: -1\n", casenum++);
+		inconsistent = true;
+		return;
+	}
+	gnode *gb = get_node(b);
 	get_node(a)->adj.push_back(b);
+	foreach(adjb, gb->adj)
+		if (*adjb == a) {
+			printf("Case %d: -1\n", casenum++);
+			inconsistent = true;
+			break;
+		}
 }
 
 #define gc()	(void) getchar()
-static void read_inequalities(void)
+static bool read_inequalities(void)
 {
 	char ca, cb;
 	int I;
 	scanf("%d", &I), gc();
 	while (I--) {
 		scanf("%c>%c", &ca, &cb), gc();
-		add_adjacent(int(cb), int(ca));
+		if (!inconsistent)
+			add_adjacent(int(cb), int(ca));
 	}
+	return !inconsistent;
 }
 
 static void free_graph(void)
@@ -67,8 +88,13 @@ static void free_graph(void)
 static void update_cascade(gnode *node, int time)
 {
 	node->time = time;
-	foreach(a, node->adj)
+	foreach(a, node->adj) {
+		if (graph[*a]->color == GRAY) {
+			inconsistent = true;
+			break;
+		}
 		update_cascade(graph[*a], time + 1);
+	}
 }
 
 static void DFS_Visit(long int v, gnode *node)
@@ -76,10 +102,15 @@ static void DFS_Visit(long int v, gnode *node)
 	node->color = GRAY;
 	foreach(a, node->adj) {
 		gnode *adj = graph[*a];
-		if (node->time >= adj->time)
+		if (node->time >= adj->time && adj->color != GRAY)
 			update_cascade(adj, node->time + 1);
-		if (adj->color == WHITE)
+		if (adj->color == WHITE && !inconsistent) {
 			DFS_Visit(*a, adj);
+		} else if (adj->color == GRAY || inconsistent) {
+			printf("Case %d: -1\n", casenum++);
+			inconsistent = true;
+			return;
+		}
 	}
 	node->color = BLACK;
 	Q.push_back(v);
@@ -87,9 +118,10 @@ static void DFS_Visit(long int v, gnode *node)
 
 static void topological_sort(void)
 {
-	foreach(n, graph)
+	foreach(n, graph) {
 		if ((*n).second->color == WHITE)
 			DFS_Visit((*n).first, (*n).second);
+	}
 }
 
 static void move_stack_top_to_exp_list(void)
@@ -137,7 +169,6 @@ static void read_expression(void)
 		move_stack_top_to_exp_list();
 }
 
-int casenum = 1;
 static void process_expression(void)
 {
 	int v = exp.front();
@@ -148,10 +179,7 @@ static void process_expression(void)
 		case '+': {
 			int b = st.top(); st.pop();
 			int a = st.top(); st.pop();
-			if (v == '*')
-				st.push(a * b);
-			else
-				st.push(a + b);
+			st.push(v == '*'?  a * b:  a + b);
 			break;
 		}
 		default:
@@ -173,10 +201,13 @@ int main(void)
 
 	scanf("%d", &T), gc();
 	while (T--) {
+		inconsistent = false;
 		read_expression();
-		read_inequalities();
-		topological_sort();
-		process_expression();
+		if (read_inequalities()) { /* if it is consistent */
+			topological_sort();
+			if (!inconsistent) /* is it still consistent? */
+				process_expression();
+		}
 		free_graph();
 	}
 	return EXIT_SUCCESS;
