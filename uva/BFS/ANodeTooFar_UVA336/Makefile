@@ -1,5 +1,5 @@
 
-default: py
+default: cpprundiff 
 
 py: uva336.py entrada.in
 	@python uva336.py < entrada.in
