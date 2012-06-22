@@ -1,0 +1,32 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CXX	Makefile	/^CXX=clang++$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS=-lm -lcrypt -Wall -Wextra -pipe$/;"	m
+Edge	main.cpp	/^    Edge(int f, int t, int w) : from(f), to(t), weight(w) {};$/;"	f	struct:Edge	access:public	signature:(int f, int t, int w)
+Edge	main.cpp	/^struct Edge {$/;"	s	file:
+Edge::Edge	main.cpp	/^    Edge(int f, int t, int w) : from(f), to(t), weight(w) {};$/;"	f	struct:Edge	access:public	signature:(int f, int t, int w)
+Edge::from	main.cpp	/^    int from, to, weight;$/;"	m	struct:Edge	file:	access:public
+Edge::operator <	main.cpp	/^    bool operator <(const Edge& b) const $/;"	f	struct:Edge	access:public	signature:(const Edge& b) const
+Edge::to	main.cpp	/^    int from, to, weight;$/;"	m	struct:Edge	file:	access:public
+Edge::weight	main.cpp	/^    int from, to, weight;$/;"	m	struct:Edge	file:	access:public
+FindSet	main.cpp	/^static int FindSet(int vertex)$/;"	f	file:	signature:(int vertex)
+Go	main.cpp	/^static void Go()$/;"	f	file:	signature:()
+Kruskal	main.cpp	/^static int Kruskal()$/;"	f	file:	signature:()
+RUN	Makefile	/^RUN=Prim$/;"	m
+ShowEdges	main.cpp	/^static void ShowEdges()$/;"	f	file:	signature:()
+ShowEdges	main.cpp	40;"	d	file:
+cities	main.cpp	/^static int cities, lines;$/;"	v	file:
+dbg	main.cpp	11;"	d	file:
+dbg	main.cpp	9;"	d	file:
+edges	main.cpp	/^static list<Edge> edges;$/;"	v	file:
+from	main.cpp	/^    int from, to, weight;$/;"	m	struct:Edge	file:	access:public
+lines	main.cpp	/^static int cities, lines;$/;"	v	file:
+main	main.cpp	/^int main(void)$/;"	f	signature:(void)
+operator <	main.cpp	/^    bool operator <(const Edge& b) const $/;"	f	struct:Edge	access:public	signature:(const Edge& b) const
+to	main.cpp	/^    int from, to, weight;$/;"	m	struct:Edge	file:	access:public
+vertices	main.cpp	/^static vector<int> vertices;$/;"	v	file:
+weight	main.cpp	/^    int from, to, weight;$/;"	m	struct:Edge	file:	access:public
